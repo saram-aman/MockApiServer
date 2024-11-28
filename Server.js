@@ -4,10 +4,11 @@ const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 const app = express();
 const port = 3000;
-const origin_url = 'http://localhost:3000';
+const client_url = 'https://mock-api-app.vercel.app'
+const origin_url = 'https://mock-api-server-one.vercel.app';
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cors({
-    origin: origin_url,
+    origin: client_url,
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type']
 }));
