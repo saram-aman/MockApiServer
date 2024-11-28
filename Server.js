@@ -28,6 +28,10 @@ app.get('/mock/:apiId', (req, res) => {
     res.json(JSON.parse(response));
 });
 
+app.get('/', (req, res) => {
+    res.send('Hello Mockies!');
+});
+
 app.listen(port, () => {
     console.log(`Mock API Generator running at ${origin_url}`);
 });
