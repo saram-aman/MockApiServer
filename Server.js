@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const app = express();
 const port = 3000;
-const origin_url = 'https://mock-api-server-one.vercel.app';
+const origin_url = 'https://mock-api-server-one.vercel.app/';
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cors({
@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
 
 app.post('/create-mock-api', (req, res) => {
     const { exampleResponse } = req.body;
+    console.log("exampleResponse", exampleResponse);
     if (!exampleResponse) return res.status(400).send('Example Response is required');
 
     const apiId = uuidv4();
