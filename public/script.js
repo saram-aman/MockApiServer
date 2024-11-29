@@ -1,4 +1,4 @@
-const origin_url = 'https://mock-api-server-one.vercel.app';
+const origin_url = 'https://mock-api-server-one.vercel.app/';
 document.getElementById('mockApiForm').addEventListener('submit', async function (event) {
     event.preventDefault();
     const exampleResponse = document.getElementById('exampleResponse').value;
