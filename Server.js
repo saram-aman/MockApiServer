@@ -22,7 +22,6 @@ app.get('/', (req, res) => {
 
 app.post('/create-mock-api', (req, res) => {
     const { exampleResponse } = req.body;
-    console.log("exampleResponse", exampleResponse);
     if (!exampleResponse) return res.status(400).send('Example Response is required');
 
     const apiId = uuidv4();
