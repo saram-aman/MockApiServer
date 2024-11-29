@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mock API Generator</title>
+        <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>Mock API Generator</h1>
+                <p>Create your APIs in seconds with ease.</p>
+            </header>
+            <form id="mockApiForm">
+                <label for="exampleResponse">Enter your JSON Response:</label>
+                <textarea id="exampleResponse" name="exampleResponse" rows="10" placeholder='{"key": "value"}' required></textarea>
+                <button type="submit">Generate API</button>
+            </form>
+            <div id="output" class="output-hidden">
+                <h2>Mock API Created!</h2>
+                <p>Access your endpoint:</p>
+                <div class="mock-url">
+                    <a href="#" id="mockApiUrl" target="_blank">Your API URL</a>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <p>Made with ❤️ by Aman</p>
+        </footer>
+    </body>
+    <script src="script.js"></script>
+</html>
