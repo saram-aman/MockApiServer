@@ -3,32 +3,265 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Mock API Generator</title>
+        <title>Modern Mock API Generator</title>
         <link rel="stylesheet" href="style.css">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/json.min.js"></script>
     </head>
     <body>
         <div class="container">
             <header>
                 <h1>Mock API Generator</h1>
-                <p>Create your APIs in seconds with ease.</p>
+                <p>Create custom mock APIs with advanced features in seconds</p>
             </header>
-            <form id="mockApiForm">
-                <label for="exampleResponse">Enter your JSON Response:</label>
-                <textarea id="exampleResponse" name="exampleResponse" rows="10" placeholder='{"key": "value"}' required></textarea>
-                <button type="submit">Generate API</button>
-            </form>
-            <div id="output" class="output-hidden">
-                <h2>Mock API Created!</h2>
-                <p>Access your endpoint:</p>
-                <div class="mock-url">
-                    <a href="#" id="mockApiUrl" target="_blank">Your API URL</a>
+            
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="basic">Basic</button>
+                <button class="tab-btn" data-tab="advanced">Advanced</button>
+                <button class="tab-btn" data-tab="examples">Examples</button>
+            </div>
+            
+            <div class="tab-content active" id="basic-tab">
+                <form id="mockApiForm">
+                    <div class="form-row">
+                        <label for="exampleResponse">JSON Response:</label>
+                        <div class="editor-wrapper">
+                            <textarea id="exampleResponse" name="exampleResponse" rows="10" placeholder='{"message": "Hello World", "status": "success", "data": []}' required></textarea>
+                            <div class="editor-tools">
+                                <button type="button" id="formatJson" class="tool-btn">Format JSON</button>
+                                <button type="button" id="validateJson" class="tool-btn">Validate</button>
+                            </div>
+                        </div>
+                        <div id="jsonValidationResult"></div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="statusCode">Status Code:</label>
+                            <select id="statusCode" name="statusCode">
+                                <option value="200">200 OK</option>
+                                <option value="201">201 Created</option>
+                                <option value="400">400 Bad Request</option>
+                                <option value="401">401 Unauthorized</option>
+                                <option value="403">403 Forbidden</option>
+                                <option value="404">404 Not Found</option>
+                                <option value="500">500 Server Error</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-col">
+                            <label for="expiresIn">Expires In (minutes):</label>
+                            <input type="number" id="expiresIn" name="expiresIn" placeholder="Never expires if blank" min="1">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="primary-btn">Generate API</button>
+                </form>
+            </div>
+            
+            <div class="tab-content" id="advanced-tab">
+                <div class="advanced-settings">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="latency">Simulated Latency (ms):</label>
+                            <input type="number" id="latency" name="latency" value="0" min="0" max="10000">
+                            <span class="tooltip">Add delay to simulate real-world API behavior</span>
+                        </div>
+                        
+                        <div class="form-col">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="requireAuth" name="requireAuth">
+                                <span>Require Authentication</span>
+                            </label>
+                            <span class="tooltip">API will require Authorization header</span>
+                        </div>
+                    </div>
+                    
+                    <div class="validation-rules">
+                        <h3>Request Validation Rules</h3>
+                        <p>Add rules to validate incoming requests</p>
+                        
+                        <div id="validationRules">
+                            <!-- Rules will be added here -->
+                        </div>
+                        
+                        <button type="button" id="addValidationRule" class="secondary-btn">
+                            <span>+</span> Add Validation Rule
+                        </button>
+                    </div>
                 </div>
             </div>
+            
+            <div class="tab-content" id="examples-tab">
+                <div class="examples">
+                    <h3>Example Templates</h3>
+                    <div class="example-list">
+                        <div class="example-card" data-example="userList">
+                            <h4>User List API</h4>
+                            <p>Returns paginated user data with metadata</p>
+                        </div>
+                        <div class="example-card" data-example="authResponse">
+                            <h4>Authentication Response</h4>
+                            <p>Successful login with JWT token</p>
+                        </div>
+                        <div class="example-card" data-example="errorResponse">
+                            <h4>Error Response</h4>
+                            <p>Standard error format with details</p>
+                        </div>
+                        <div class="example-card" data-example="productData">
+                            <h4>Product Data</h4>
+                            <p>E-commerce product listing response</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="output" class="output-hidden">
+                <!-- This will be populated when API is created -->
+            </div>
         </div>
+        
+        <!-- Templates -->
+        <template id="validationRuleTemplate">
+            <div class="validation-rule">
+                <div class="form-row">
+                    <div class="form-col">
+                        <label for="ruleType_{{index}}">Rule Type:</label>
+                        <select id="ruleType_{{index}}" class="rule-type">
+                            <option value="required">Required Field</option>
+                            <option value="type">Type Check</option>
+                        </select>
+                    </div>
+                    <div class="form-col">
+                        <label for="ruleField_{{index}}">Field Path:</label>
+                        <input type="text" id="ruleField_{{index}}" class="rule-field" placeholder="user.email or data.id">
+                    </div>
+                    <div class="form-col rule-value-container" style="display:none;">
+                        <label for="ruleValue_{{index}}">Expected Type:</label>
+                        <select id="ruleValue_{{index}}" class="rule-value">
+                            <option value="string">String</option>
+                            <option value="number">Number</option>
+                            <option value="boolean">Boolean</option>
+                            <option value="object">Object</option>
+                            <option value="array">Array</option>
+                        </select>
+                    </div>
+                    <div class="form-col">
+                        <button type="button" class="delete-rule danger-btn">✕</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <template id="exampleUserList">
+{
+  "success": true,
+  "page": 1,
+  "total_pages": 3,
+  "per_page": 10,
+  "total_count": 25,
+  "data": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "role": "admin",
+      "created_at": "2023-05-15T09:12:34Z"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "role": "user",
+      "created_at": "2023-06-22T14:45:12Z"
+    }
+  ]
+}
+        </template>
+        
+        <template id="exampleAuthResponse">
+{
+  "success": true,
+  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+  "user": {
+    "id": 42,
+    "username": "johndoe",
+    "email": "john@example.com",
+    "role": "user"
+  },
+  "expires_at": "2023-12-31T23:59:59Z"
+}
+        </template>
+        
+        <template id="exampleErrorResponse">
+{
+  "success": false,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "The request contains invalid parameters",
+    "details": [
+      {
+        "field": "email",
+        "message": "Email address is not valid"
+      },
+      {
+        "field": "password",
+        "message": "Password must be at least 8 characters"
+      }
+    ]
+  },
+  "request_id": "req_7f8d9e6c5b4a"
+}
+        </template>
+        
+        <template id="exampleProductData">
+{
+  "success": true,
+  "products": [
+    {
+      "id": "prod-001",
+      "name": "Wireless Headphones",
+      "description": "Premium noise-cancelling wireless headphones",
+      "price": 199.99,
+      "currency": "USD",
+      "category": "electronics",
+      "in_stock": true,
+      "image_url": "https://example.com/images/headphones.jpg",
+      "ratings": {
+        "average": 4.7,
+        "count": 243
+      }
+    },
+    {
+      "id": "prod-002",
+      "name": "Smart Watch",
+      "description": "Fitness and health tracking smartwatch",
+      "price": 249.99,
+      "currency": "USD",
+      "category": "wearables",
+      "in_stock": false,
+      "image_url": "https://example.com/images/smartwatch.jpg",
+      "ratings": {
+        "average": 4.5,
+        "count": 187
+      }
+    }
+  ],
+  "total": 2,
+  "filters_applied": {
+    "category": "electronics",
+    "min_price": 100
+  }
+}
+        </template>
+        
         <footer class="footer">
             <p>Made with ❤️ by Aman</p>
         </footer>
+        
+        <script src="script.js"></script>
     </body>
-    <script src="script.js"></script>
 </html>
