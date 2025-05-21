@@ -4,21 +4,41 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Modern Mock API Generator</title>
+        <meta name="description" content="Create custom mock APIs with advanced features in seconds">
+        <meta name="theme-color" content="#4a90e2">
+        
+        <!-- Favicon and App Icons -->
+        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+        <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+        
+        <!-- Stylesheets -->
         <link rel="stylesheet" href="style.css">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        
+        <!-- Scripts -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/json.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </head>
     <body>
         <div class="container">
             <header class="header">
                 <div class="logo">
-                    <i class="fas fa-code"></i>
+                    <i class="fas fa-rocket"></i>
                 </div>
                 <h1>Mock API Generator</h1>
                 <p>Create custom mock APIs with advanced features in seconds</p>
+                <div class="header-actions">
+                    <a href="https://github.com/saram-aman/MockApiServer" target="_blank" class="button secondary small">
+                        <i class="fab fa-github"></i>
+                        View on GitHub
+                    </a>
+                    <button class="button small" onclick="window.open('https://documenter.getpostman.com/view/your-collection-id', '_blank')">
+                        <i class="fas fa-book"></i>
+                        Documentation
+                    </button>
+                </div>
             </header>
             
             <div class="tabs">
@@ -39,21 +59,35 @@
             <div class="tab-content active" id="basic-tab">
                 <form id="mockApiForm" class="card">
                     <div class="form-row">
-                        <label for="exampleResponse">
-                            <i class="fas fa-code"></i>
-                            JSON Response:
-                        </label>
-                        <div class="editor-wrapper">
-                            <textarea id="exampleResponse" name="exampleResponse" rows="10" placeholder='{"message": "Hello World", "status": "success", "data": []}' required></textarea>
-                            <div class="editor-tools">
+                        <div class="json-editor-header">
+                            <label for="exampleResponse">
+                                <i class="fas fa-code"></i>
+                                JSON Response:
+                            </label>
+                            <div class="json-editor-actions">
+                                <button type="button" id="beautifyJson" class="tool-btn">
+                                    <i class="fas fa-magic"></i>
+                                    Beautify
+                                </button>
+                                <button type="button" id="minifyJson" class="tool-btn">
+                                    <i class="fas fa-compress-alt"></i>
+                                    Minify
+                                </button>
                                 <button type="button" id="formatJson" class="tool-btn">
                                     <i class="fas fa-indent"></i>
-                                    Format JSON
+                                    Format
                                 </button>
                                 <button type="button" id="validateJson" class="tool-btn">
                                     <i class="fas fa-check-circle"></i>
                                     Validate
                                 </button>
+                            </div>
+                        </div>
+                        <div class="editor-wrapper">
+                            <textarea id="exampleResponse" name="exampleResponse" rows="15" placeholder='{"message": "Hello World", "status": "success", "data": []}' required></textarea>
+                            <div class="editor-info">
+                                <span class="char-count">0 characters</span>
+                                <span class="json-size">0 KB</span>
                             </div>
                         </div>
                         <div id="jsonValidationResult"></div>
@@ -309,8 +343,61 @@
         </template>
         
         <footer class="footer">
-            <p>Made with ❤️ by Aman</p>
+            <div class="footer-content">
+                <p>Made with <i class="fas fa-heart"></i> by Aman</p>
+                <div class="footer-links">
+                    <a href="#" onclick="showKeyboardShortcuts()">
+                        <i class="fas fa-keyboard"></i>
+                        Keyboard Shortcuts
+                    </a>
+                    <a href="https://github.com/saram-aman/MockApiServer/issues" target="_blank">
+                        <i class="fas fa-bug"></i>
+                        Report Bug
+                    </a>
+                    <a href="https://github.com/saram-aman/MockApiServer/discussions" target="_blank">
+                        <i class="fas fa-comments"></i>
+                        Feedback
+                    </a>
+                </div>
+            </div>
         </footer>
+        
+        <!-- Keyboard Shortcuts Modal -->
+        <div id="keyboardShortcutsModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h3><i class="fas fa-keyboard"></i> Keyboard Shortcuts</h3>
+                <div class="shortcuts-grid">
+                    <div class="shortcut">
+                        <kbd>Ctrl</kbd> + <kbd>Enter</kbd>
+                        <span>Generate API</span>
+                    </div>
+                    <div class="shortcut">
+                        <kbd>Ctrl</kbd> + <kbd>B</kbd>
+                        <span>Beautify JSON</span>
+                    </div>
+                    <div class="shortcut">
+                        <kbd>Ctrl</kbd> + <kbd>M</kbd>
+                        <span>Minify JSON</span>
+                    </div>
+                    <div class="shortcut">
+                        <kbd>Ctrl</kbd> + <kbd>Space</kbd>
+                        <span>Format JSON</span>
+                    </div>
+                    <div class="shortcut">
+                        <kbd>Ctrl</kbd> + <kbd>V</kbd>
+                        <span>Validate JSON</span>
+                    </div>
+                    <div class="shortcut">
+                        <kbd>Esc</kbd>
+                        <span>Close Modal</span>
+                    </div>
+                </div>
+                <button class="button" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                    Close
+                </button>
+            </div>
+        </div>
         
         <script src="script.js"></script>
     </body>

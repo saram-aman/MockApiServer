@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add smooth scroll behavior
     document.documentElement.style.scrollBehavior = 'smooth';
     
+    // Initialize keyboard shortcuts
+    initializeKeyboardShortcuts();
+    
     // Tab functionality with smooth transitions
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -33,34 +36,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // JSON Validation and Formatting with improved feedback
+    // JSON Editor functionality
     const jsonInput = document.getElementById('exampleResponse');
     const validateButton = document.getElementById('validateJson');
     const formatButton = document.getElementById('formatJson');
+    const beautifyButton = document.getElementById('beautifyJson');
+    const minifyButton = document.getElementById('minifyJson');
     const validationResult = document.getElementById('jsonValidationResult');
     
-    // Auto-resize textarea
+    // Update character count and file size
+    function updateEditorInfo() {
+        const text = jsonInput.value;
+        const charCount = text.length;
+        const size = new Blob([text]).size;
+        
+        document.querySelector('.char-count').textContent = `${charCount.toLocaleString()} characters`;
+        document.querySelector('.json-size').textContent = `${(size / 1024).toFixed(1)} KB`;
+    }
+    
+    // Auto-resize textarea and update info
     jsonInput.addEventListener('input', function() {
         this.style.height = 'auto';
         this.style.height = this.scrollHeight + 'px';
+        updateEditorInfo();
     });
     
-    validateButton.addEventListener('click', () => {
+    // Validate JSON
+    function validateJson() {
         const jsonString = jsonInput.value.trim();
         if (!jsonString) {
             showPopupMessage('JSON is empty', 'error');
-            return;
+            return false;
         }
         
         try {
             JSON.parse(jsonString);
             showPopupMessage('JSON is valid!', 'success');
+            return true;
         } catch (error) {
             showPopupMessage(`Invalid JSON: ${error.message}`, 'error');
+            return false;
         }
-    });
+    }
     
-    formatButton.addEventListener('click', () => {
+    validateButton.addEventListener('click', validateJson);
+    
+    // Format JSON
+    function formatJson() {
         const jsonString = jsonInput.value.trim();
         if (!jsonString) return;
         
@@ -69,12 +91,108 @@ document.addEventListener('DOMContentLoaded', function() {
             jsonInput.value = formatted;
             jsonInput.style.height = 'auto';
             jsonInput.style.height = jsonInput.scrollHeight + 'px';
-            
+            updateEditorInfo();
             showPopupMessage('JSON formatted successfully!', 'success');
         } catch (error) {
             showPopupMessage(`Invalid JSON: ${error.message}`, 'error');
         }
-    });
+    }
+    
+    formatButton.addEventListener('click', formatJson);
+    
+    // Beautify JSON
+    function beautifyJson() {
+        const jsonString = jsonInput.value.trim();
+        if (!jsonString) return;
+        
+        try {
+            const obj = JSON.parse(jsonString);
+            const beautified = JSON.stringify(obj, null, 4);
+            jsonInput.value = beautified;
+            jsonInput.style.height = 'auto';
+            jsonInput.style.height = jsonInput.scrollHeight + 'px';
+            updateEditorInfo();
+            showPopupMessage('JSON beautified!', 'success');
+        } catch (error) {
+            showPopupMessage(`Invalid JSON: ${error.message}`, 'error');
+        }
+    }
+    
+    beautifyButton.addEventListener('click', beautifyJson);
+    
+    // Minify JSON
+    function minifyJson() {
+        const jsonString = jsonInput.value.trim();
+        if (!jsonString) return;
+        
+        try {
+            const minified = JSON.stringify(JSON.parse(jsonString));
+            jsonInput.value = minified;
+            jsonInput.style.height = 'auto';
+            jsonInput.style.height = jsonInput.scrollHeight + 'px';
+            updateEditorInfo();
+            showPopupMessage('JSON minified!', 'success');
+        } catch (error) {
+            showPopupMessage(`Invalid JSON: ${error.message}`, 'error');
+        }
+    }
+    
+    minifyButton.addEventListener('click', minifyJson);
+    
+    // Keyboard shortcuts
+    function initializeKeyboardShortcuts() {
+        document.addEventListener('keydown', function(e) {
+            // Only handle if not in input fields (except JSON editor)
+            if (e.target.tagName === 'INPUT' && e.target !== jsonInput) return;
+            
+            // Ctrl/Cmd + Enter = Generate API
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                document.querySelector('button[type="submit"]').click();
+            }
+            
+            // Ctrl/Cmd + B = Beautify
+            if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                e.preventDefault();
+                beautifyJson();
+            }
+            
+            // Ctrl/Cmd + M = Minify
+            if ((e.ctrlKey || e.metaKey) && e.key === 'm') {
+                e.preventDefault();
+                minifyJson();
+            }
+            
+            // Ctrl/Cmd + Space = Format
+            if ((e.ctrlKey || e.metaKey) && e.key === ' ') {
+                e.preventDefault();
+                formatJson();
+            }
+            
+            // Ctrl/Cmd + V (when pressed in editor) = Validate
+            if ((e.ctrlKey || e.metaKey) && e.key === 'v' && e.target === jsonInput) {
+                setTimeout(validateJson, 100); // Wait for paste to complete
+            }
+            
+            // Escape = Close Modal
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    }
+    
+    // Modal functionality
+    window.showKeyboardShortcuts = function() {
+        const modal = document.getElementById('keyboardShortcutsModal');
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
+    };
+    
+    window.closeModal = function() {
+        const modal = document.getElementById('keyboardShortcutsModal');
+        modal.classList.remove('active');
+        setTimeout(() => modal.style.display = 'none', 300);
+    };
     
     // Validation Rules Management with animations
     const addRuleButton = document.getElementById('addValidationRule');
@@ -422,4 +540,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 300);
         }, 3000);
     }
+    
+    // Initialize editor info
+    updateEditorInfo();
 });
