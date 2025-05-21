@@ -32,9 +32,9 @@ body {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 2rem;
 }
 
 /* Header Styles */
@@ -82,10 +82,11 @@ body {
   background: var(--card-background);
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
   transition: var(--transition);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
 }
 
 .card:hover {
@@ -192,22 +193,22 @@ textarea {
   display: flex;
   gap: 1rem;
   margin-bottom: 2rem;
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 1rem;
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) transparent;
 }
 
 .tab-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
   padding: 0.8rem 1.5rem;
-  border: none;
-  background: none;
-  color: #666;
-  cursor: pointer;
-  transition: var(--transition);
-  font-weight: 500;
-  position: relative;
+  white-space: nowrap;
+  opacity: 0.7;
+}
+
+.tab-btn.active {
+  opacity: 1;
 }
 
 .tab-btn i {
@@ -216,21 +217,6 @@ textarea {
 
 .tab-btn:hover {
   color: var(--primary-color);
-}
-
-.tab-btn.active {
-  color: var(--primary-color);
-}
-
-.tab-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1rem;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: var(--primary-color);
-  animation: slideIn 0.3s ease;
 }
 
 .tab-content {
@@ -247,13 +233,15 @@ textarea {
 /* Form Styles */
 .form-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
 .form-col {
   position: relative;
+  width: 100%;
 }
 
 label {
@@ -293,12 +281,15 @@ label i {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .json-editor-actions {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .editor-wrapper {
@@ -307,38 +298,43 @@ label i {
   border-radius: var(--border-radius);
   background-color: var(--editor-bg);
   box-shadow: var(--box-shadow);
+  min-height: 400px;
+  width: 100%;
 }
 
 #exampleResponse {
   width: 100%;
-  min-height: 300px;
-  padding: 1rem;
+  min-height: 400px;
+  padding: 1.5rem;
   font-family: 'Fira Code', monospace;
-  font-size: 0.9rem;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.6;
   color: var(--editor-text);
   background-color: transparent;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--border-radius);
   resize: vertical;
+  tab-size: 2;
 }
 
 #exampleResponse:focus {
   outline: none;
   border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
 .editor-info {
   position: absolute;
-  bottom: 0.5rem;
-  right: 0.5rem;
+  bottom: 1rem;
+  right: 1rem;
   display: flex;
   gap: 1rem;
-  font-size: 0.75rem;
-  color: #666;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
   background-color: rgba(0, 0, 0, 0.6);
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem 0.8rem;
   border-radius: 4px;
+  backdrop-filter: blur(4px);
 }
 
 /* Example Card Styles */
@@ -574,23 +570,23 @@ code {
   }
   
   .card {
-    background-color: var(--card-background);
+    background-color: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.1);
   }
   
   .input, select, textarea {
-    background-color: #333;
-    border-color: #444;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.1);
     color: var(--text-color);
   }
   
   .tool-btn {
-    background-color: rgba(0, 0, 0, 0.2);
-    color: #ddd;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
   }
   
   .copy-input {
-    background-color: #333;
+    background-color: rgba(0, 0, 0, 0.2);
     color: var(--text-color);
   }
   
@@ -780,4 +776,124 @@ kbd {
   100% {
     transform: scale(1);
   }
+}
+
+/* Improve tool buttons */
+.tool-btn {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: var(--border-radius);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tool-btn:hover {
+  background-color: var(--primary-color);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.tool-btn i {
+  font-size: 1rem;
+}
+
+/* Improve form layout */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.form-col {
+  position: relative;
+  width: 100%;
+}
+
+/* Improve select and input styles */
+select, input[type="number"] {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+  background-color: var(--editor-bg);
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+select:focus, input[type="number"]:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* Add custom scrollbar for the JSON editor */
+#exampleResponse::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+#exampleResponse::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+#exampleResponse::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+#exampleResponse::-webkit-scrollbar-thumb:hover {
+  background: #357abd;
+}
+
+/* Improve responsiveness */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .json-editor-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .json-editor-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .tool-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  #exampleResponse {
+    font-size: 13px;
+    padding: 1rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Add smooth transition for the editor height */
+#exampleResponse {
+  transition: height 0.2s ease;
 }
