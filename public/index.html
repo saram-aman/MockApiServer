@@ -9,29 +9,51 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/json.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </head>
     <body>
         <div class="container">
-            <header>
+            <header class="header">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                </div>
                 <h1>Mock API Generator</h1>
                 <p>Create custom mock APIs with advanced features in seconds</p>
             </header>
             
             <div class="tabs">
-                <button class="tab-btn active" data-tab="basic">Basic</button>
-                <button class="tab-btn" data-tab="advanced">Advanced</button>
-                <button class="tab-btn" data-tab="examples">Examples</button>
+                <button class="tab-btn active" data-tab="basic">
+                    <i class="fas fa-cube"></i>
+                    <span>Basic</span>
+                </button>
+                <button class="tab-btn" data-tab="advanced">
+                    <i class="fas fa-sliders"></i>
+                    <span>Advanced</span>
+                </button>
+                <button class="tab-btn" data-tab="examples">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Examples</span>
+                </button>
             </div>
             
             <div class="tab-content active" id="basic-tab">
-                <form id="mockApiForm">
+                <form id="mockApiForm" class="card">
                     <div class="form-row">
-                        <label for="exampleResponse">JSON Response:</label>
+                        <label for="exampleResponse">
+                            <i class="fas fa-code"></i>
+                            JSON Response:
+                        </label>
                         <div class="editor-wrapper">
                             <textarea id="exampleResponse" name="exampleResponse" rows="10" placeholder='{"message": "Hello World", "status": "success", "data": []}' required></textarea>
                             <div class="editor-tools">
-                                <button type="button" id="formatJson" class="tool-btn">Format JSON</button>
-                                <button type="button" id="validateJson" class="tool-btn">Validate</button>
+                                <button type="button" id="formatJson" class="tool-btn">
+                                    <i class="fas fa-indent"></i>
+                                    Format JSON
+                                </button>
+                                <button type="button" id="validateJson" class="tool-btn">
+                                    <i class="fas fa-check-circle"></i>
+                                    Validate
+                                </button>
                             </div>
                         </div>
                         <div id="jsonValidationResult"></div>
@@ -39,7 +61,10 @@
                     
                     <div class="form-row">
                         <div class="form-col">
-                            <label for="statusCode">Status Code:</label>
+                            <label for="statusCode">
+                                <i class="fas fa-server"></i>
+                                Status Code:
+                            </label>
                             <select id="statusCode" name="statusCode">
                                 <option value="200">200 OK</option>
                                 <option value="201">201 Created</option>
@@ -52,20 +77,29 @@
                         </div>
                         
                         <div class="form-col">
-                            <label for="expiresIn">Expires In (minutes):</label>
+                            <label for="expiresIn">
+                                <i class="fas fa-clock"></i>
+                                Expires In (minutes):
+                            </label>
                             <input type="number" id="expiresIn" name="expiresIn" placeholder="Never expires if blank" min="1">
                         </div>
                     </div>
                     
-                    <button type="submit" class="primary-btn">Generate API</button>
+                    <button type="submit" class="button">
+                        <i class="fas fa-magic"></i>
+                        Generate API
+                    </button>
                 </form>
             </div>
             
             <div class="tab-content" id="advanced-tab">
-                <div class="advanced-settings">
+                <div class="advanced-settings card">
                     <div class="form-row">
                         <div class="form-col">
-                            <label for="latency">Simulated Latency (ms):</label>
+                            <label for="latency">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Simulated Latency (ms):
+                            </label>
                             <input type="number" id="latency" name="latency" value="0" min="0" max="10000">
                             <span class="tooltip">Add delay to simulate real-world API behavior</span>
                         </div>
@@ -73,22 +107,23 @@
                         <div class="form-col">
                             <label class="checkbox-label">
                                 <input type="checkbox" id="requireAuth" name="requireAuth">
-                                <span>Require Authentication</span>
+                                <span><i class="fas fa-lock"></i> Require Authentication</span>
                             </label>
                             <span class="tooltip">API will require Authorization header</span>
                         </div>
                     </div>
                     
                     <div class="validation-rules">
-                        <h3>Request Validation Rules</h3>
+                        <h3><i class="fas fa-shield-alt"></i> Request Validation Rules</h3>
                         <p>Add rules to validate incoming requests</p>
                         
                         <div id="validationRules">
                             <!-- Rules will be added here -->
                         </div>
                         
-                        <button type="button" id="addValidationRule" class="secondary-btn">
-                            <span>+</span> Add Validation Rule
+                        <button type="button" id="addValidationRule" class="button secondary">
+                            <i class="fas fa-plus"></i>
+                            Add Validation Rule
                         </button>
                     </div>
                 </div>
@@ -96,21 +131,25 @@
             
             <div class="tab-content" id="examples-tab">
                 <div class="examples">
-                    <h3>Example Templates</h3>
-                    <div class="example-list">
-                        <div class="example-card" data-example="userList">
+                    <h3><i class="fas fa-lightbulb"></i> Example Templates</h3>
+                    <div class="grid">
+                        <div class="example-card card" data-example="userList">
+                            <i class="fas fa-users card-icon"></i>
                             <h4>User List API</h4>
                             <p>Returns paginated user data with metadata</p>
                         </div>
-                        <div class="example-card" data-example="authResponse">
+                        <div class="example-card card" data-example="authResponse">
+                            <i class="fas fa-key card-icon"></i>
                             <h4>Authentication Response</h4>
                             <p>Successful login with JWT token</p>
                         </div>
-                        <div class="example-card" data-example="errorResponse">
+                        <div class="example-card card" data-example="errorResponse">
+                            <i class="fas fa-exclamation-triangle card-icon"></i>
                             <h4>Error Response</h4>
                             <p>Standard error format with details</p>
                         </div>
-                        <div class="example-card" data-example="productData">
+                        <div class="example-card card" data-example="productData">
+                            <i class="fas fa-shopping-cart card-icon"></i>
                             <h4>Product Data</h4>
                             <p>E-commerce product listing response</p>
                         </div>
@@ -125,21 +164,30 @@
         
         <!-- Templates -->
         <template id="validationRuleTemplate">
-            <div class="validation-rule">
+            <div class="validation-rule card">
                 <div class="form-row">
                     <div class="form-col">
-                        <label for="ruleType_{{index}}">Rule Type:</label>
+                        <label for="ruleType_{{index}}">
+                            <i class="fas fa-filter"></i>
+                            Rule Type:
+                        </label>
                         <select id="ruleType_{{index}}" class="rule-type">
                             <option value="required">Required Field</option>
                             <option value="type">Type Check</option>
                         </select>
                     </div>
                     <div class="form-col">
-                        <label for="ruleField_{{index}}">Field Path:</label>
+                        <label for="ruleField_{{index}}">
+                            <i class="fas fa-dot-circle"></i>
+                            Field Path:
+                        </label>
                         <input type="text" id="ruleField_{{index}}" class="rule-field" placeholder="user.email or data.id">
                     </div>
                     <div class="form-col rule-value-container" style="display:none;">
-                        <label for="ruleValue_{{index}}">Expected Type:</label>
+                        <label for="ruleValue_{{index}}">
+                            <i class="fas fa-code"></i>
+                            Expected Type:
+                        </label>
                         <select id="ruleValue_{{index}}" class="rule-value">
                             <option value="string">String</option>
                             <option value="number">Number</option>
@@ -149,7 +197,9 @@
                         </select>
                     </div>
                     <div class="form-col">
-                        <button type="button" class="delete-rule danger-btn">✕</button>
+                        <button type="button" class="delete-rule button danger">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 </div>
             </div>

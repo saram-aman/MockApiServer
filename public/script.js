@@ -1,7 +1,13 @@
 const origin_url = 'https://mock-api-server-one.vercel.app/';
 
+// Initialize highlight.js
+hljs.highlightAll();
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Tab functionality
+    // Add smooth scroll behavior
+    document.documentElement.style.scrollBehavior = 'smooth';
+    
+    // Tab functionality with smooth transitions
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
     
@@ -9,36 +15,48 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', () => {
             // Remove active class from all buttons and contents
             tabButtons.forEach(btn => btn.classList.remove('active'));
-            tabContents.forEach(content => content.classList.remove('active'));
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+                content.style.opacity = '0';
+            });
             
             // Add active class to clicked button and corresponding content
             button.classList.add('active');
             const tabId = button.getAttribute('data-tab');
-            document.getElementById(`${tabId}-tab`).classList.add('active');
+            const activeContent = document.getElementById(`${tabId}-tab`);
+            activeContent.classList.add('active');
+            
+            // Fade in animation
+            setTimeout(() => {
+                activeContent.style.opacity = '1';
+            }, 50);
         });
     });
     
-    // JSON Validation and Formatting
+    // JSON Validation and Formatting with improved feedback
     const jsonInput = document.getElementById('exampleResponse');
     const validateButton = document.getElementById('validateJson');
     const formatButton = document.getElementById('formatJson');
     const validationResult = document.getElementById('jsonValidationResult');
     
+    // Auto-resize textarea
+    jsonInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
+    });
+    
     validateButton.addEventListener('click', () => {
         const jsonString = jsonInput.value.trim();
         if (!jsonString) {
-            validationResult.innerHTML = '<span class="validation-error">JSON is empty</span>';
+            showPopupMessage('JSON is empty', 'error');
             return;
         }
         
         try {
             JSON.parse(jsonString);
-            validationResult.innerHTML = '<span class="validation-success">JSON is valid</span>';
-            setTimeout(() => {
-                validationResult.innerHTML = '';
-            }, 3000);
+            showPopupMessage('JSON is valid!', 'success');
         } catch (error) {
-            validationResult.innerHTML = `<span class="validation-error">Invalid JSON: ${error.message}</span>`;
+            showPopupMessage(`Invalid JSON: ${error.message}`, 'error');
         }
     });
     
@@ -52,16 +70,13 @@ document.addEventListener('DOMContentLoaded', function() {
             jsonInput.style.height = 'auto';
             jsonInput.style.height = jsonInput.scrollHeight + 'px';
             
-            validationResult.innerHTML = '<span class="validation-success">JSON formatted</span>';
-            setTimeout(() => {
-                validationResult.innerHTML = '';
-            }, 3000);
+            showPopupMessage('JSON formatted successfully!', 'success');
         } catch (error) {
-            validationResult.innerHTML = `<span class="validation-error">Invalid JSON: ${error.message}</span>`;
+            showPopupMessage(`Invalid JSON: ${error.message}`, 'error');
         }
     });
     
-    // Validation Rules Management
+    // Validation Rules Management with animations
     const addRuleButton = document.getElementById('addValidationRule');
     const rulesContainer = document.getElementById('validationRules');
     let ruleIndex = 0;
@@ -74,7 +89,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const template = document.getElementById('validationRuleTemplate').innerHTML;
         const ruleElement = document.createElement('div');
         ruleElement.innerHTML = template.replace(/{{index}}/g, ruleIndex);
+        ruleElement.style.opacity = '0';
+        ruleElement.style.transform = 'translateY(20px)';
         rulesContainer.appendChild(ruleElement);
+        
+        // Trigger animation
+        setTimeout(() => {
+            ruleElement.style.transition = 'all 0.3s ease';
+            ruleElement.style.opacity = '1';
+            ruleElement.style.transform = 'translateY(0)';
+        }, 50);
         
         // Add event listener for rule type change
         const ruleType = ruleElement.querySelector('.rule-type');
@@ -83,43 +107,80 @@ document.addEventListener('DOMContentLoaded', function() {
         ruleType.addEventListener('change', () => {
             if (ruleType.value === 'type') {
                 valueContainer.style.display = 'block';
+                valueContainer.style.opacity = '0';
+                setTimeout(() => {
+                    valueContainer.style.transition = 'opacity 0.3s ease';
+                    valueContainer.style.opacity = '1';
+                }, 50);
             } else {
-                valueContainer.style.display = 'none';
+                valueContainer.style.opacity = '0';
+                setTimeout(() => {
+                    valueContainer.style.display = 'none';
+                }, 300);
             }
         });
         
-        // Add event listener for delete button
+        // Add event listener for delete button with animation
         const deleteButton = ruleElement.querySelector('.delete-rule');
         deleteButton.addEventListener('click', () => {
-            rulesContainer.removeChild(ruleElement);
+            ruleElement.style.opacity = '0';
+            ruleElement.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                rulesContainer.removeChild(ruleElement);
+            }, 300);
         });
         
         ruleIndex++;
     }
     
-    // Load Example Templates
+    // Load Example Templates with animation
     const exampleCards = document.querySelectorAll('.example-card');
     
     exampleCards.forEach(card => {
         card.addEventListener('click', () => {
+            // Add click animation
+            card.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                card.style.transform = 'scale(1)';
+            }, 150);
+            
             const exampleId = card.getAttribute('data-example');
             const template = document.getElementById(`example${exampleId.charAt(0).toUpperCase() + exampleId.slice(1)}`);
             if (template) {
                 jsonInput.value = template.innerHTML.trim();
                 
-                // Switch to basic tab
+                // Switch to basic tab with animation
                 tabButtons.forEach(btn => btn.classList.remove('active'));
-                tabContents.forEach(content => content.classList.remove('active'));
-                document.querySelector('[data-tab="basic"]').classList.add('active');
-                document.getElementById('basic-tab').classList.add('active');
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    content.style.opacity = '0';
+                });
+                
+                const basicTab = document.querySelector('[data-tab="basic"]');
+                const basicContent = document.getElementById('basic-tab');
+                basicTab.classList.add('active');
+                basicContent.classList.add('active');
+                
+                setTimeout(() => {
+                    basicContent.style.opacity = '1';
+                }, 50);
                 
                 // Format the loaded JSON
                 formatButton.click();
             }
         });
+        
+        // Add hover animation
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-5px)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0)';
+        });
     });
     
-    // Form Submission
+    // Form Submission with loading animation
     const mockApiForm = document.getElementById('mockApiForm');
     const outputContainer = document.getElementById('output');
     
@@ -131,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             JSON.parse(exampleResponse);
         } catch (error) {
-            validationResult.innerHTML = `<span class="validation-error">Invalid JSON: ${error.message}</span>`;
+            showPopupMessage(`Invalid JSON: ${error.message}`, 'error');
             return;
         }
         
@@ -161,14 +222,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Show loading state
+        // Show loading state with animation
         outputContainer.innerHTML = `
-            <div class="loading">
-                <div class="spinner"></div>
+            <div class="loading-container">
+                <div class="loading"></div>
                 <p>Creating your mock API...</p>
             </div>
         `;
         outputContainer.style.display = 'block';
+        outputContainer.style.opacity = '0';
+        setTimeout(() => {
+            outputContainer.style.opacity = '1';
+        }, 50);
         
         try {
             const response = await fetch(`${origin_url}create-mock-api`, {
@@ -203,23 +268,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             }
             
-            // Generate the output with copy buttons for various use cases
+            // Generate the output with copy buttons and animations
             outputContainer.innerHTML = `
                 <div class="output-success">
-                    <h2>Mock API Successfully Created! 🎉</h2>
+                    <h2><i class="fas fa-check-circle"></i> Mock API Successfully Created! 🎉</h2>
                     ${expirationInfo}
                     
                     <div class="output-tabs">
-                        <button class="output-tab active" data-output="endpoint">Endpoint</button>
-                        <button class="output-tab" data-output="fetch">Fetch</button>
-                        <button class="output-tab" data-output="axios">Axios</button>
-                        <button class="output-tab" data-output="curl">cURL</button>
+                        <button class="output-tab active" data-output="endpoint">
+                            <i class="fas fa-link"></i> Endpoint
+                        </button>
+                        <button class="output-tab" data-output="fetch">
+                            <i class="fas fa-code"></i> Fetch
+                        </button>
+                        <button class="output-tab" data-output="axios">
+                            <i class="fas fa-download"></i> Axios
+                        </button>
+                        <button class="output-tab" data-output="curl">
+                            <i class="fas fa-terminal"></i> cURL
+                        </button>
                     </div>
                     
                     <div class="output-content active" id="endpoint-output">
                         <div class="copy-container">
                             <input type="text" value="${result.url}" readonly class="copy-input">
-                            <button class="copy-btn" data-copy="${result.url}">Copy</button>
+                            <button class="copy-btn" data-copy="${result.url}">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
                         </div>
                     </div>
                     
@@ -228,7 +303,9 @@ document.addEventListener('DOMContentLoaded', function() {
   .then(response => response.json())
   .then(data => console.log(data))
   .catch(error => console.error('Error:', error));</code></pre>
-                        <button class="copy-btn copy-code-btn" data-copy="fetch">Copy Code</button>
+                        <button class="copy-btn copy-code-btn" data-copy="fetch">
+                            <i class="fas fa-copy"></i> Copy Code
+                        </button>
                     </div>
                     
                     <div class="output-content" id="axios-output">
@@ -239,112 +316,110 @@ document.addEventListener('DOMContentLoaded', function() {
   .catch(error => {
     console.error('Error:', error);
   });</code></pre>
-                        <button class="copy-btn copy-code-btn" data-copy="axios">Copy Code</button>
+                        <button class="copy-btn copy-code-btn" data-copy="axios">
+                            <i class="fas fa-copy"></i> Copy Code
+                        </button>
                     </div>
                     
                     <div class="output-content" id="curl-output">
                         <pre><code class="language-bash">curl -X GET ${result.url} -H "Content-Type: application/json"</code></pre>
-                        <button class="copy-btn copy-code-btn" data-copy="curl">Copy Code</button>
-                    </div>
-                    
-                    <div class="dashboard-link">
-                        <p>View dashboard and manage your API:</p>
-                        <a href="${result.dashboardUrl}" target="_blank" class="dashboard-btn">Open Dashboard</a>
-                    </div>
-                    
-                    <div class="api-buttons">
-                        <button type="button" id="createNewApi" class="secondary-btn">Create Another API</button>
+                        <button class="copy-btn copy-code-btn" data-copy="curl">
+                            <i class="fas fa-copy"></i> Copy Code
+                        </button>
                     </div>
                 </div>
             `;
             
-            // Initialize syntax highlighting
+            // Initialize output tabs
+            initializeOutputTabs();
+            
+            // Initialize copy buttons
+            initializeCopyButtons();
+            
+            // Highlight code blocks
             document.querySelectorAll('pre code').forEach((block) => {
-                hljs.highlightElement(block);
+                hljs.highlightBlock(block);
             });
             
-            // Output tab functionality
-            const outputTabs = document.querySelectorAll('.output-tab');
-            const outputContents = document.querySelectorAll('.output-content');
-            
-            outputTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    outputTabs.forEach(t => t.classList.remove('active'));
-                    outputContents.forEach(c => c.classList.remove('active'));
-                    
-                    tab.classList.add('active');
-                    const outputId = tab.getAttribute('data-output');
-                    document.getElementById(`${outputId}-output`).classList.add('active');
-                });
-            });
-            
-            // Copy URL functionality
-            document.querySelector('.copy-btn').addEventListener('click', function() {
-                const url = this.getAttribute('data-copy');
-                navigator.clipboard.writeText(url).then(() => {
-                    showPopupMessage('API URL copied to clipboard!', 'success');
-                }).catch((error) => {
-                    console.error('Clipboard Error:', error);
-                    showPopupMessage('Failed to copy URL. Please try manually.', 'error');
-                });
-            });
-            
-            // Copy code functionality
-            document.querySelectorAll('.copy-code-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const codeType = this.getAttribute('data-copy');
-                    const codeElement = document.querySelector(`#${codeType}-output code`);
-                    
-                    navigator.clipboard.writeText(codeElement.textContent).then(() => {
-                        showPopupMessage('Code copied to clipboard!', 'success');
-                    }).catch((error) => {
-                        console.error('Clipboard Error:', error);
-                        showPopupMessage('Failed to copy code. Please try manually.', 'error');
-                    });
-                });
-            });
-            
-            // Create new API button
-            document.getElementById('createNewApi').addEventListener('click', () => {
-                mockApiForm.reset();
-                outputContainer.style.display = 'none';
-                mockApiForm.style.display = 'flex';
-                jsonInput.value = '';
-                
-                // Reset validation rules
-                rulesContainer.innerHTML = '';
-            });
-            
+            // Scroll to output
+            outputContainer.scrollIntoView({ behavior: 'smooth' });
         } catch (error) {
-            showPopupMessage('Error creating mock API: ' + error.message, 'error');
-            console.error('Error:', error);
-            
-            outputContainer.innerHTML = `
-                <div class="output-error">
-                    <h2>Error Creating API</h2>
-                    <p>${error.message}</p>
-                    <button type="button" id="tryAgainBtn" class="primary-btn">Try Again</button>
-                </div>
-            `;
-            
-            document.getElementById('tryAgainBtn').addEventListener('click', () => {
-                outputContainer.style.display = 'none';
-                mockApiForm.style.display = 'flex';
-            });
+            showPopupMessage(error.message, 'error');
+            outputContainer.style.display = 'none';
         }
     });
     
-    // Utility function to show popup messages
+    // Initialize output tabs
+    function initializeOutputTabs() {
+        const outputTabs = document.querySelectorAll('.output-tab');
+        const outputContents = document.querySelectorAll('.output-content');
+        
+        outputTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                outputTabs.forEach(t => t.classList.remove('active'));
+                outputContents.forEach(c => {
+                    c.classList.remove('active');
+                    c.style.opacity = '0';
+                });
+                
+                tab.classList.add('active');
+                const outputId = tab.getAttribute('data-output');
+                const activeContent = document.getElementById(`${outputId}-output`);
+                activeContent.classList.add('active');
+                
+                setTimeout(() => {
+                    activeContent.style.opacity = '1';
+                }, 50);
+            });
+        });
+    }
+    
+    // Initialize copy buttons
+    function initializeCopyButtons() {
+        document.querySelectorAll('.copy-btn').forEach(button => {
+            button.addEventListener('click', async () => {
+                const textToCopy = button.getAttribute('data-copy');
+                try {
+                    await navigator.clipboard.writeText(textToCopy);
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    button.classList.add('copied');
+                    
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.classList.remove('copied');
+                    }, 2000);
+                } catch (err) {
+                    showPopupMessage('Failed to copy text', 'error');
+                }
+            });
+        });
+    }
+    
+    // Show popup message
     function showPopupMessage(message, type) {
         const popup = document.createElement('div');
         popup.className = `popup-message ${type}`;
-        popup.innerText = message;
+        popup.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            ${message}
+        `;
+        
         document.body.appendChild(popup);
+        
+        // Trigger animation
         setTimeout(() => {
-            popup.classList.add('fadeOut');
+            popup.style.opacity = '1';
+            popup.style.transform = 'translateY(0)';
+        }, 50);
+        
+        // Remove popup after delay
+        setTimeout(() => {
+            popup.style.opacity = '0';
+            popup.style.transform = 'translateY(-20px)';
             setTimeout(() => {
-                popup.remove();
+                document.body.removeChild(popup);
             }, 300);
-        }, 2700);
+        }, 3000);
     }
 });
